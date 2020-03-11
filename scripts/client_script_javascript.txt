@@ -1,0 +1,32 @@
+var uniqueArray = aivData.reduce(function (a, d) {
+       if (a.indexOf(d.year) === -1) {
+         a.push(d.year);
+       }
+       return a;
+    }, []);
+var transposedData = [];
+aivData.forEach(function(d) {
+  for (var key in d) {
+    var obj = {};
+                if (key == 'year') {
+                       obj['productLine'] = d['productLine'];
+           if (uniqueArray[0] == d['year']) {
+                                  obj[d['year']] = d['extendedPrice'];
+                                  obj[uniqueArray[1]] = 0;
+                                  obj[uniqueArray[2]] = 0;
+                }  else  if (uniqueArray[1] == d['year']) {
+                                     obj[d['year']] = d['extendedPrice'];
+                                  obj[uniqueArray[2]] = 0;
+                                  obj[uniqueArray[0]] = 0;            
+                                                 }
+                                                else  if (uniqueArray[2] == d['year']) {
+                                     obj[d['year']] = d['extendedPrice'];
+                                  obj[uniqueArray[0]] = 0;
+                                  obj[uniqueArray[1]] = 0;            
+                                                 }
+            
+                transposedData.push(obj);
+                }
+  }
+});
+return transposedData;

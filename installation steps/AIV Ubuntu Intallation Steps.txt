@@ -1,0 +1,142 @@
+Step 1: login to Ubuntu
+​
+Step 2: Update ubuntu and install unzip
+sudo su
+​sudo apt update
+sudo apt-get install unzip
+
+Step 3: Download and Install java 8 
+​sudo apt-get install openjdk-8-jre
+java -version
+
+=====================================================================================
+# STEPS FOR POSTGRESQL
+
+Step 4: Download and Install Postgres
+​sudo apt-get install postgresql
+
+​Step 5: Create aiv database and change password for postgres user
+sudo su - postgres
+psql
+ALTER USER postgres PASSWORD 'password';
+create database aiv; 
+
+# STEPS FOR MYSQL DATABASE
+
+Step 4: Download and Install Mysql 
+sudo apt-get install mysql-server
+sudo mysql_secure_installation
+And setup mysql settings.
+sudo mysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+CREATE USER 'aivadmin'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'training'@'localhost' IDENTIFIED BY 'password'; #ONLY IF YOU HAVE AIV TRAINING DATA
+FLUSH PRIVILEGES;
+
+Step 5: Create aiv database and import training data
+
+CREATE DATABASE aiv_metadata;
+CREATE DATABASE aiv_training;
+GRANT ALL ON aiv_metadata.* TO 'aivadmin'@'localhost';
+GRANT ALL ON aiv_training.* TO 'training'@'localhost'; #ONLY IF YOU HAVE AIV TRAINING DATA
+
+mysql -u training -p aiv_training < aiv_training.sql
+
+==============================================================================
+
+Step 6:Create aivadmin user and give sudoer permission
+adduser aivadmin
+usermod -aG sudo aivadmin
+su - aivadmin
+
+Step 7:Create below folders in opt and change owner to aivadmin
+​cd /opt
+sudo mkdir aiv
+sudo chown aivadmin -R aiv/
+
+cd aiv 
+​sudo mkdir repository 
+sudo mkdir logs  
+cd /opt
+
+Step 8: Download tomcat installer
+Download link update from time to time so follow steps in video for correct download link.
+wget http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.51/bin/apache-tomcat-8.5.51.tar.gz
+
+Step 9: Download aiv installer
+Download link update from time to time so follow steps in video for correct download link.
+wget https://www.dropbox.com/s/vr9dgqy5mtwf9er/AIV_4.1.zip?dl=0
+
+Step 10: Untar tomcat and test tomcat
+tar xzvf apache-tomcat-8.5.51.tar.gz
+mv apache-tomcat-8.5.51 tomcat
+tomcat/bin/startup.sh
+
+Step 11: Go to browser http://<ipaddress>:8080/
+If you see tomcat page
+
+Step 12: Shutdown tomcat and remove all applications
+tomcat/bin/shutdown.sh
+
+Step 13: Remove all directory under /opt/aiv/tomcat/webapps
+cd /opt/aiv/tomcat/webapps
+rm -rf *
+
+Step 14: Unzip and install AIV
+mv 'AIV_4.1.zip?dl=0'  aiv.zip
+unzip aiv.zip
+Follow steps in video to install using postgres/mysql database.
+
+Step 15: Set appropriate settings on setenv.sh file as per your environment and set executable permission on sh file
+export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
+export JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+chmod +x setenv.sh
+
+For tomcat 8.5.51 onward.
+#export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
+export JAVA_OPTS="$JAVA_OPTS -Xmx4g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+
+
+Step 16: Disable unwanted out of box sample datasource
+	A. Comment exteral db and jasper source in <AIV tomcat>/webapps/aiv/WEB-INF/classes/settings.properties
+	  
+	  Line number 15 
+	  #jasper.connection=true,java:comp/env/jdbc/classicmodels
+	  
+	  Line number 30 and 31
+	  #external.db.1=jdbc,mysql,ClassicModels,true,java:comp/env/jdbc/classicmodels
+	  #external.db.2=olap,SampleData,mondrian.olap4j.MondrianOlap4jDriver,jdbc:mondrian:DataSource,C:/tools/tomcat/data/sampledata.mondrian.xml,true,org.hsqldb.jdbcDriver,java:comp/env/jdbc/SampleData
+
+	B. Comment Classic model and Sample db in <AIV tomcat>/webapps/aiv/WEB-INF/web.xml
+
+	 <!--
+	 <resource-ref>
+    		<description>Classicmodels</description>
+    		<res-ref-name>jdbc/classicmodels</res-ref-name>
+    		<res-type>javax.sql.DataSource</res-type>
+    		<res-auth>Container</res-auth>
+  	</resource-ref>
+  	<resource-ref>
+    		<description>Sampledata</description>
+    		<res-ref-name>jdbc/SampleData</res-ref-name>
+    		<res-type>javax.sql.DataSource</res-type>
+    		<res-auth>Container</res-auth>
+  	</resource-ref> 
+	-->	
+
+	C. Comment jdbc/classicmodels and jdbc/SampleData in <AIV tomcat>/webapps/aiv/META-INF/context.xml
+	<!--	
+	<Resource auth="Container" driverClassName="org.apache.derby.jdbc.EmbeddedDriver" maxTotal="30" maxIdle="10" maxWaitMillis="10000" minIdle="10" name="jdbc/classicmodels" username="ClassicModels" password="" url="jdbc:derby:jar:(C:/tools/tomcat/webapps/aiv/WEB-INF/lib/org.eclipse.birt.runtime_4.6.0-20160607.jar)BirtSample;create=false;user=ClassicModels;password=" type="javax.sql.DataSource" />
+	<Resource auth="Container" driverClassName="org.hsqldb.jdbcDriver" maxTotal="50" maxIdle="5" maxWaitMillis="10000" minIdle="10" name="jdbc/SampleData" username="pentaho_user" password="password" url="jdbc:hsqldb:file:C:/tools/tomcat/data/sampledata" type="javax.sql.DataSource" />
+	-->
+
+	D. Add below attribute to jdbc/ActiveIDB in <AIV tomcat>/webapps/aiv/META-INF/context.xml
+	    testOnBorrow="true" validationQuery="SELECT 1"   
+
+Step 17: Start tomcat server
+/opt/tomcat/bin/startup.sh
+
+Step 18: Login to AIV
+http://<<IP Address>>:8080/aiv
+Username: Admin (Case Sensitive)
+Password: password (Case Sensitive)

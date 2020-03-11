@@ -1,0 +1,18 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import json
+import base64
+
+x = [12,1,53,2,3,32,43,12]
+y = [21,42,1,42,4,64,7,43]
+
+plt.plot(x,y)
+plt.savefig('test.png')
+plt.show()
+
+data = {}
+with open('test.png', mode='rb') as file:
+    img = file.read()
+data['data'] = [{'img': base64.encodebytes(img).decode('utf-8')}]
+ds= data
+display(ds);

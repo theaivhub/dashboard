@@ -1,0 +1,1 @@
+SELECT [year], ([productLine]) AS [productLine], [extendedPrice] FROM ? PIVOT (Sum(CAST([extendedPrice] AS FLOAT)) FOR [productLine])

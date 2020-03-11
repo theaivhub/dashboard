@@ -1,0 +1,25 @@
+
+Exercise 6 Advance Table
+
+Task 4: Create a Table with Custom Column
+
+Step 9:
+
+<div style="background: red;width: {{Proficiency}}%;padding-left:15px;font-weight:bold;height: 43px;padding-top: 10px;" >{{Proficiency}}%</div>
+
+Step 11:
+
+<div style="background: orange;width: {{Proficiency}}%;padding-left:15px;font-weight:bold;height: 43px;padding-top: 10px;" >{{Proficiency}}%</div>
+
+Step 13:
+
+<div style="background: green;width: {{Proficiency}}%;padding-left:15px;font-weight:bold;height: 43px;padding-top: 10px;" >{{Proficiency}}%</div>
+
+
+Exercise 6 Advance Table
+
+Task 5: Create a Table with Custom Column
+
+Step 5:
+
+<span style="display:flex;"><img src="https://flagpedia.net/data/flags/mini/{{countrycode}}.png" style="width:18px;height:12px;margin-top: 5px;margin-right: 5px;"> {{Country}} </span>

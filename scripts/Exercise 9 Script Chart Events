@@ -1,0 +1,28 @@
+Exercise 9 Create an event in chart widget
+
+Task 5: Create an Event which can Change the tab on Value Selection
+
+Step 3:
+
+var clicked = event.event.target.dataItem.dataContext.productLine;
+var tab = new CustomEvent("aiv-change-tab", {
+   "detail": 1
+ });
+
+window.parent.dispatchEvent(tab);
+
+
+Task 6: Extend the Event so it Filters the Data based on Event
+
+Step 7:
+
+setTimeout(function(){
+var filter = new CustomEvent("aiv-filter-call", {
+   "detail": {"productLine": clicked}
+ });
+ window.parent.dispatchEvent(filter);
+});
+
+
+var data = event.event.target.dataItem.dataContext.productLine;
+window.open('https://www.google.co.uk/search?q='+data+'&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj2nKvIzennAhVSmuYKHTmNAf4Q_AUoAXoECBIQAw&biw=1536&bih=754');
