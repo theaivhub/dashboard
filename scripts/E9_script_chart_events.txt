@@ -18,7 +18,7 @@ Step 7:
 
 setTimeout(function(){
 var filter = new CustomEvent("aiv-filter-call", {
-   "detail": {"productLine": clicked}
+   "detail": {"Product Line": clicked}
  });
  window.parent.dispatchEvent(filter);
 });

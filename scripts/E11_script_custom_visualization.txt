@@ -3,7 +3,7 @@ Exercise 11 Custom Visualization
 
 Task 2: Write a HTML code, JavaScript and CSS style
 
-Step 1:
+Step 1: HTML CODE for HTML TAB
 
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   	<script src="https://d3js.org/d3.v5.min.js"></script>
@@ -16,7 +16,7 @@ Step 1:
 
 
 
-Step 4:
+Step 3: JavaScript CODE for JavaScript TAB
 
 
 // Data in Json Format
@@ -204,7 +204,7 @@ Step 4:
       .text('Source: Stack Overflow, 2018')
 
 
-Step 7:
+Step 5: CSS code for CSS TAB
 
 body {
   font-family: 'Open Sans', sans-serif;
