@@ -402,4 +402,28 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-05 14:02:06
+
+DROP TABLE IF EXISTS `leads`;
+
+CREATE TABLE `leads` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `age` varchar(20) DEFAULT NULL,
+  `sex` varchar(5) DEFAULT NULL,
+  `mobile1` varchar(20) DEFAULT NULL,
+  `mobile2` varchar(20) DEFAULT NULL,
+  `address` varchar(256) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `state` varchar(45) DEFAULT NULL,
+  `pincode` varchar(10) DEFAULT NULL,
+  `model` varchar(45) DEFAULT NULL,
+  `budget` int(11) DEFAULT NULL,
+  `comments` varchar(256) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `suitable_time` varchar(45) DEFAULT NULL,
+  `time_frame` varchar(45) DEFAULT NULL,
+  `probablity` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
