@@ -84,7 +84,7 @@ chmod +x setenv.sh
 
 For tomcat 8.5.51 onward.
 #export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
-export JAVA_OPTS="$JAVA_OPTS -Xmx4g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+export JAVA_OPTS="$JAVA_OPTS -Xms1g -Xmx4g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
 
 
 Step 16: Disable unwanted out of box sample datasource
