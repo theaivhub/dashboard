@@ -1,142 +1,127 @@
-Step 1: login to Centos
-​
-Step 2: Update centos and install unzip and wget
-sudo su
-​sudo yum update
-sudo yum install unzip
-sudo yum install wget
 
-Step 3: Download and Install java 8 
-yum install java-1.8.0-openjdk
-java -version
+Active Intelligence Visualization (AIV) Centos installation step by step guide: 
+
+Please note # represent the commented line and only for information:
+
 
 =====================================================================================
-# STEPS FOR MYSQL DATABASE
 
-Step 4: Download and Install Mysql 
-wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
-rpm -ivh mysql-community-release-el7-5.noarch.rpm
-yum install mysql-server
+# Step 1: login to Centos
 
-systemctl start mysqld
-systemctl stop mysqld
-systemctl restart mysqld
-systemctl status mysqld
 
-sudo mysql_secure_installation
+=====================================================================================​# Step 2: Update centos and install unzip and wget
 
-And setup mysql settings.
-sudo mysql
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-CREATE USER 'aiv'@'localhost' IDENTIFIED BY 'password';
+sudo su​
+sudo yum updatesudo yum install unzipsudo yum install wget=====================================================================================# Step 3: Download and Install java 8 
+
+yum install java-1.8.0-openjdkjava -version=====================================================================================
+# Step 4: Download and Install Mysql (STEPS FOR MYSQL DATABASE)
+
+wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpmrpm -ivh mysql-community-release-el7-5.noarch.rpmyum install mysql-serversystemctl start mysqldsystemctl stop mysqldsystemctl restart mysqldsystemctl status mysqldsudo mysql_secure_installation=====================================================================================
+# Step 5: Login to MySQL
+
+
+mysql -u root -p
+
+password
+CREATE USER 'aiv_user'@'localhost' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;=====================================================================================# Step 6: Create aiv database and grant all access
+CREATE DATABASE aiv;GRANT ALL ON aiv.* TO 'aiv_user'@'localhost';
+
 FLUSH PRIVILEGES;
 
-Step 5: Create aiv database 
+quit;=====================================================================================# Step 7:Create below folders in /opt
 
-CREATE DATABASE aiv_metadata;
-GRANT ALL ON aiv_metadata.* TO 'aiv'@'localhost';
+​cd /optmkdir aiv=====================================================================================# Step 8: Download tomcat installer
 
-#ONLY IF YOU HAVE AIV TRAINING DATA
-CREATE USER 'training'@'localhost' IDENTIFIED BY 'password'; #ONLY IF YOU HAVE AIV TRAINING DATA
-CREATE DATABASE aiv_training; 
-GRANT ALL ON aiv_training.* TO 'training'@'localhost'; 
-mysql -u training -p aiv_training < aiv_training.sql
+Download link gets updated from time to time, if the following link doesn't work, please get the updated link from apache website for Tomcat 8.5.wget http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.51/bin/apache-tomcat-8.5.51.tar.gz=====================================================================================# Step 9: Download AIV installer file
 
-==============================================================================
+The Latest AIV installer file gets updated from time to time, you can check the latest release from AIV official website by visiting https://aivhub.com/download and check the dropbox link for latest release.wget https://www.dropbox.com/s/vr9dgqy5mtwf9er/AIV_4.1.zip?dl=0=====================================================================================
+# Step 10: Untar tomcat and test tomcattar xzvf apache-tomcat-8.5.51.tar.gzmv apache-tomcat-8.5.51 aiv/tomcataiv/tomcat/bin/startup.sh=====================================================================================# Step 11: Go to browser http://<ipaddress>:8080/
 
-Step 6:Create below folders in opt and change owner to aivadmin
-​cd /opt
-mkdir aiv
+If you see tomcat page, the tomcat is installed properly=====================================================================================# Step 12: Shutdown tomcat and remove all directory under /opt/aiv/tomcat/webapps
+aiv/tomcat/bin/shutdown.sh
 
-Step 7: Download tomcat installer
-Download link update from time to time so follow steps in video for correct download link.
-wget http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.51/bin/apache-tomcat-8.5.51.tar.gz
-
-Step 8: Download aiv installer
-Download link update from time to time so follow steps in video for correct download link.
-wget https://www.dropbox.com/s/vr9dgqy5mtwf9er/AIV_4.1.zip?dl=0
-
-Step 9: Untar tomcat and test tomcat
-tar xzvf apache-tomcat-8.5.51.tar.gz
-mv apache-tomcat-8.5.51 aiv/tomcat
-aiv/tomcat/bin/startup.sh
+cd /opt/aiv/tomcat/webappsrm -rf *=====================================================================================
+# Step 13: Unzip and install AIV, please ensure that the zip file name matches with the version you have downloaded in the Step 9.
+cd /optmv 'AIV_4.1.zip?dl=0'  aiv.zipunzip aiv.zip=====================================================================================
+# Step 14: Setup AIV
 
 
-Step 10: Go to browser http://<ipaddress>:8080/
-If you see tomcat page
-
-Step 11: Shutdown tomcat and remove all applications
-aiv/tomcat/bin/shutdown.sh
-
-Step 12: Remove all directory under /opt/aiv/tomcat/webapps
-cd /opt/aiv/tomcat/webapps
-rm -rf *
-
-Step 13: Unzip and install AIV
 cd /opt
-mv 'AIV_4.1.zip?dl=0'  aiv.zip
-unzip aiv.zip
 
-Step 14: Set appropriate settings on setenv.sh file as per your environment and set executable permission on sh file
-export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
-export JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+java -jar setup.jar
 
-For tomcat 8.5.51 onward.
-#export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
-export JAVA_OPTS="$JAVA_OPTS -Xms1g -Xmx4g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+Press Y (It looks like your system does not have a Java Development Kit (JDK) available.
+The software that you plan to install requires a JDK for both its installation and execution.
+Do you still want to proceed with the installation process?)
+
+Press 1 (Welcome to the installation of Active Intelligence Visualization 4.0!
+The homepage is at: http://www.aivhub.com/)
+
+Press 1 (to continue)
+
+Press 1 (Read the End User License Agreement (EULA) press 1 if you agree, press 2 to reject and press 3 to redisplay)
+
+Enter Y (Select the setup options i.e. New setup)
+
+Enter N (Include optional pack "Upgrade" (If you want to upgrade press N in the above option and Y in the 
+
+Press 1 (to continue)
+
+/opt/aiv/tomcat
+
+/opt/aiv/repository
+
+/opt/aiv/logs
+
+Press 1 to continue
+
+Press 0 (Press 0 for MySQL metadata, Press 1 if Oracle, Press 2 for Postgres
+
+Press 1 (to continue)
+
+jdbc:mysql://localhost:3306/aiv_metadata?useSSL=false (Update the jdbc URL as follow)
+
+aiv (in username)
+
+password (in password)
+
+Press 1 (to continue)
+=====================================================================================
+# Step 15: Set appropriate settings on setenv.sh file as per your environment and set executable permission on sh file, recommended RAM is set to 4GB however if you want to reduce the size you can change in the below script.
+# export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g". (This is commented line only use if require)
+export JAVA_OPTS="$JAVA_OPTS -Xms1g -Xmx4g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"=====================================================================================# Step 16: Create aivadmin user (if user already exists, move to the next steps)
+
+adduser aivadmin=====================================================================================
+# Step 17: Chown to aivadmin to all subfolders under /opt/aiv/sudo chown aivadmin:aivadmin -R aiv/=====================================================================================# Step 18: Change user to aivadmin and start tomcat
+
+su - aivadmin/opt/aiv/tomcat/bin/startup.sh=====================================================================================
+Step 19: Login to AIV
+http://<<IP Address>>:8080/aivUsername: Admin (Case Sensitive)Password: password (Case Sensitive)
 
 
-Step 16:Create aivadmin user
-adduser aivadmin
+Congratulations you have successfully install Active Intelligence Visualization (AIV) in your Centos Environment.  Watch YouTube videos to see AIV learning videos.
 
-Step 17:Chown to aivadmin to all subfolders under /opt/aiv/
-sudo chown aivadmin:aivadmin -R aiv/
 
-Step 18:Change user to aivadmin and start tomcat
-su - aivadmin
+
+
+
+======================================================================
+
+Follow the steps below to remove sample datasource which comes with AIV default installation:
+
+# You will require to Stop the tomcat server before performing the below steps and restart the server after completion of the step . (If you have performed the Step 19, then only follow the Step 20)
+/opt/aiv/tomcat/bin/shutdown.sh
+	A. Comment external db and jasper source in <AIV tomcat>/webapps/aiv/WEB-INF/classes/settings.properties	  	  Line number 15 	  #jasper.connection=true,java:comp/env/jdbc/classicmodels	  	  Line number 30 and 31	  #external.db.1=jdbc,mysql,ClassicModels,true,java:comp/env/jdbc/classicmodels	  #external.db.2=olap,SampleData,mondrian.olap4j.MondrianOlap4jDriver,jdbc:mondrian:DataSource,C:/tools/tomcat/data/sampledata.mondrian.xml,true,org.hsqldb.jdbcDriver,java:comp/env/jdbc/SampleData	B. Comment Classic model and Sample db in <AIV tomcat>/webapps/aiv/WEB-INF/web.xml	 <!--	 <resource-ref>    		<description>Classicmodels</description>    		<res-ref-name>jdbc/classicmodels</res-ref-name>    		<res-type>javax.sql.DataSource</res-type>    		<res-auth>Container</res-auth>  	</resource-ref>  	<resource-ref>    		<description>Sampledata</description>    		<res-ref-name>jdbc/SampleData</res-ref-name>    		<res-type>javax.sql.DataSource</res-type>    		<res-auth>Container</res-auth>  	</resource-ref> 	-->		C. Comment jdbc/classicmodels and jdbc/SampleData in <AIV tomcat>/webapps/aiv/META-INF/context.xml	<!--		<Resource auth="Container" driverClassName="org.apache.derby.jdbc.EmbeddedDriver" maxTotal="30" maxIdle="10" maxWaitMillis="10000" minIdle="10" name="jdbc/classicmodels" username="ClassicModels" password="" url="jdbc:derby:jar:(C:/tools/tomcat/webapps/aiv/WEB-INF/lib/org.eclipse.birt.runtime_4.6.0-20160607.jar)BirtSample;create=false;user=ClassicModels;password=" type="javax.sql.DataSource" />	<Resource auth="Container" driverClassName="org.hsqldb.jdbcDriver" maxTotal="50" maxIdle="5" maxWaitMillis="10000" minIdle="10" name="jdbc/SampleData" username="pentaho_user" password="password" url="jdbc:hsqldb:file:C:/tools/tomcat/data/sampledata" type="javax.sql.DataSource" />	-->	D. Add below attribute to jdbc/ActiveIDB in <AIV tomcat>/webapps/aiv/META-INF/context.xml	    testOnBorrow="true" validationQuery="SELECT 1"   
+
+
 /opt/aiv/tomcat/bin/startup.sh
 
-Step 19: Disable unwanted out of box sample datasource
-	A. Comment exteral db and jasper source in <AIV tomcat>/webapps/aiv/WEB-INF/classes/settings.properties
-	  
-	  Line number 15 
-	  #jasper.connection=true,java:comp/env/jdbc/classicmodels
-	  
-	  Line number 30 and 31
-	  #external.db.1=jdbc,mysql,ClassicModels,true,java:comp/env/jdbc/classicmodels
-	  #external.db.2=olap,SampleData,mondrian.olap4j.MondrianOlap4jDriver,jdbc:mondrian:DataSource,C:/tools/tomcat/data/sampledata.mondrian.xml,true,org.hsqldb.jdbcDriver,java:comp/env/jdbc/SampleData
+=====================================================================================
 
-	B. Comment Classic model and Sample db in <AIV tomcat>/webapps/aiv/WEB-INF/web.xml
+The following step is NOT required for AIV new installation or upgrade.  This step will only work if you have AIV Training Data, you must be logged into mysql database:CREATE USER 'training'@'localhost' IDENTIFIED BY 'password';
+CREATE DATABASE aiv_training; GRANT ALL ON aiv_training.* TO 'training'@'localhost'; mysql -u training -p aiv_training < aiv_training.sql
 
-	 <!--
-	 <resource-ref>
-    		<description>Classicmodels</description>
-    		<res-ref-name>jdbc/classicmodels</res-ref-name>
-    		<res-type>javax.sql.DataSource</res-type>
-    		<res-auth>Container</res-auth>
-  	</resource-ref>
-  	<resource-ref>
-    		<description>Sampledata</description>
-    		<res-ref-name>jdbc/SampleData</res-ref-name>
-    		<res-type>javax.sql.DataSource</res-type>
-    		<res-auth>Container</res-auth>
-  	</resource-ref> 
-	-->	
-
-	C. Comment jdbc/classicmodels and jdbc/SampleData in <AIV tomcat>/webapps/aiv/META-INF/context.xml
-	<!--	
-	<Resource auth="Container" driverClassName="org.apache.derby.jdbc.EmbeddedDriver" maxTotal="30" maxIdle="10" maxWaitMillis="10000" minIdle="10" name="jdbc/classicmodels" username="ClassicModels" password="" url="jdbc:derby:jar:(C:/tools/tomcat/webapps/aiv/WEB-INF/lib/org.eclipse.birt.runtime_4.6.0-20160607.jar)BirtSample;create=false;user=ClassicModels;password=" type="javax.sql.DataSource" />
-	<Resource auth="Container" driverClassName="org.hsqldb.jdbcDriver" maxTotal="50" maxIdle="5" maxWaitMillis="10000" minIdle="10" name="jdbc/SampleData" username="pentaho_user" password="password" url="jdbc:hsqldb:file:C:/tools/tomcat/data/sampledata" type="javax.sql.DataSource" />
-	-->
-
-	D. Add below attribute to jdbc/ActiveIDB in <AIV tomcat>/webapps/aiv/META-INF/context.xml
-	    testOnBorrow="true" validationQuery="SELECT 1"   
-
-Step 20: Stop and Start tomcat server
-/opt/aiv/tomcat/bin/shutdown.sh
-/opt/aiv/tomcat/bin/startup.sh
-
-Step 18: Login to AIV
-http://<<IP Address>>:8080/aiv
-Username: Admin (Case Sensitive)
-Password: password (Case Sensitive)
+quit;
+
