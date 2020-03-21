@@ -1,6 +1,6 @@
-Step 1: login to Ubuntu
+Step 1: login to Centos
 ​
-Step 2: Update ubuntu and install unzip
+Step 2: Update centos and install unzip
 sudo su
 ​sudo yum update
 sudo yum install unzip
