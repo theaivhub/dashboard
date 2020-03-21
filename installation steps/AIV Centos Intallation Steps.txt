@@ -4,6 +4,7 @@ Step 2: Update ubuntu and install unzip
 sudo su
 ​sudo yum update
 sudo yum install unzip
+sudo yum install wget
 
 Step 3: Download and Install java 8 
 ​sudo yum install java-1.8.0-openjdk
@@ -13,81 +14,89 @@ java -version
 # STEPS FOR MYSQL DATABASE
 
 Step 4: Download and Install Mysql 
-sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
-sudo /etc/init.d/mysql start
+wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+rpm -ivh mysql-community-release-el7-5.noarch.rpm
+yum install mysql-server
+
+systemctl start mysqld
+systemctl stop mysqld
+systemctl restart mysqld
+systemctl status mysqld
+
 sudo mysql_secure_installation
+
 And setup mysql settings.
 sudo mysql
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-CREATE USER 'aivadmin'@'localhost' IDENTIFIED BY 'password';
-CREATE USER 'training'@'localhost' IDENTIFIED BY 'password'; #ONLY IF YOU HAVE AIV TRAINING DATA
+CREATE USER 'aiv'@'localhost' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 
-Step 5: Create aiv database and import training data
+Step 5: Create aiv database 
 
 CREATE DATABASE aiv_metadata;
-CREATE DATABASE aiv_training;
-GRANT ALL ON aiv_metadata.* TO 'aivadmin'@'localhost';
-GRANT ALL ON aiv_training.* TO 'training'@'localhost'; #ONLY IF YOU HAVE AIV TRAINING DATA
+GRANT ALL ON aiv_metadata.* TO 'aiv'@'localhost';
 
+#ONLY IF YOU HAVE AIV TRAINING DATA
+CREATE USER 'training'@'localhost' IDENTIFIED BY 'password'; #ONLY IF YOU HAVE AIV TRAINING DATA
+CREATE DATABASE aiv_training; 
+GRANT ALL ON aiv_training.* TO 'training'@'localhost'; 
 mysql -u training -p aiv_training < aiv_training.sql
 
 ==============================================================================
 
-Step 6:Create aivadmin user and give sudoer permission
-adduser aivadmin
-usermod -aG sudo aivadmin
-su - aivadmin
-
-Step 7:Create below folders in opt and change owner to aivadmin
+Step 6:Create below folders in opt and change owner to aivadmin
 ​cd /opt
-sudo mkdir aiv
-sudo chown aivadmin -R aiv/
+mkdir aiv
 
-cd aiv 
-​sudo mkdir repository 
-sudo mkdir logs  
-cd /opt
-
-Step 8: Download tomcat installer
+Step 7: Download tomcat installer
 Download link update from time to time so follow steps in video for correct download link.
 wget http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.51/bin/apache-tomcat-8.5.51.tar.gz
 
-Step 9: Download aiv installer
+Step 8: Download aiv installer
 Download link update from time to time so follow steps in video for correct download link.
 wget https://www.dropbox.com/s/vr9dgqy5mtwf9er/AIV_4.1.zip?dl=0
 
-Step 10: Untar tomcat and test tomcat
+Step 9: Untar tomcat and test tomcat
 tar xzvf apache-tomcat-8.5.51.tar.gz
-mv apache-tomcat-8.5.51 tomcat
-tomcat/bin/startup.sh
+mv apache-tomcat-8.5.51 aiv/tomcat
+aiv/tomcat/bin/startup.sh
 
-Step 11: Go to browser http://<ipaddress>:8080/
+
+Step 10: Go to browser http://<ipaddress>:8080/
 If you see tomcat page
 
-Step 12: Shutdown tomcat and remove all applications
-tomcat/bin/shutdown.sh
+Step 11: Shutdown tomcat and remove all applications
+aiv/tomcat/bin/shutdown.sh
 
-Step 13: Remove all directory under /opt/aiv/tomcat/webapps
+Step 12: Remove all directory under /opt/aiv/tomcat/webapps
 cd /opt/aiv/tomcat/webapps
 rm -rf *
 
-Step 14: Unzip and install AIV
+Step 13: Unzip and install AIV
+cd /opt
 mv 'AIV_4.1.zip?dl=0'  aiv.zip
 unzip aiv.zip
-Follow steps in video to install using postgres/mysql database.
 
-Step 15: Set appropriate settings on setenv.sh file as per your environment and set executable permission on sh file
-#export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
-export JAVA_OPTS="$JAVA_OPTS -Xmx2g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
-chmod +x setenv.sh
+Step 14: Set appropriate settings on setenv.sh file as per your environment and set executable permission on sh file
+export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
+export JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
 
 For tomcat 8.5.51 onward.
 #export CATALINA_OPTS="$CATALINA_OPTS -Xms1g -Xmx4g"
 export JAVA_OPTS="$JAVA_OPTS -Xms1g -Xmx4g -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
 
 
-Step 16: Disable unwanted out of box sample datasource
+Step 16:Create aivadmin user
+adduser aivadmin
+
+Step 17:Chown to aivadmin to all subfolders under /opt/aiv/
+sudo chown aivadmin:aivadmin -R aiv/
+
+Step 18:Change user to aivadmin and start tomcat
+su - aivadmin
+/opt/aiv/tomcat/bin/startup.sh
+
+Step 19: Disable unwanted out of box sample datasource
 	A. Comment exteral db and jasper source in <AIV tomcat>/webapps/aiv/WEB-INF/classes/settings.properties
 	  
 	  Line number 15 
@@ -123,8 +132,9 @@ Step 16: Disable unwanted out of box sample datasource
 	D. Add below attribute to jdbc/ActiveIDB in <AIV tomcat>/webapps/aiv/META-INF/context.xml
 	    testOnBorrow="true" validationQuery="SELECT 1"   
 
-Step 17: Start tomcat server
-/opt/tomcat/bin/startup.sh
+Step 20: Stop and Start tomcat server
+/opt/aiv/tomcat/bin/shutdown.sh
+/opt/aiv/tomcat/bin/startup.sh
 
 Step 18: Login to AIV
 http://<<IP Address>>:8080/aiv
