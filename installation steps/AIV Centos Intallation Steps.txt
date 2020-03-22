@@ -17,7 +17,21 @@ sudo yum updatesudo yum install unzipsudo yum install wget===============
 yum install java-1.8.0-openjdkjava -version=====================================================================================
 # Step 4: Download and Install Mysql (STEPS FOR MYSQL DATABASE)
 
-wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpmrpm -ivh mysql-community-release-el7-5.noarch.rpmyum install mysql-serversystemctl start mysqldsystemctl stop mysqldsystemctl restart mysqldsystemctl status mysqldsudo mysql_secure_installation=====================================================================================
+wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpmrpm -ivh mysql-community-release-el7-5.noarch.rpmyum install mysql-serversystemctl start mysqldsystemctl stop mysqldsystemctl restart mysqldsystemctl status mysqldsudo mysql_secure_installation
+
+Press N (VALIDATE PASSWORD COMPONENT)
+
+password (Set a new password of your choice, in this example we are setting password as password)
+
+password (Re-enter new password:)
+
+Press Y (Remove Anonymous users?)
+
+Press Y (Disallow root login remotely?)
+
+Press Y (Remove Test database and access to it?)
+
+Press Y (Reload privileges tables now?)=====================================================================================
 # Step 5: Login to MySQL
 
 
@@ -30,7 +44,9 @@ password
 
 FLUSH PRIVILEGES;
 
-quit;=====================================================================================# Step 7:Create below folders in /opt
+quit;
+
+clear;=====================================================================================# Step 7:Create below folders in /opt
 
 ​cd /optmkdir aiv=====================================================================================# Step 8: Download tomcat installer
 
@@ -47,8 +63,6 @@ cd /opt/aiv/tomcat/webappsrm -rf *==========================================
 cd /optmv 'AIV_4.1.zip?dl=0'  aiv.zipunzip aiv.zip=====================================================================================
 # Step 14: Setup AIV
 
-
-cd /opt
 
 java -jar setup.jar
 
@@ -81,9 +95,9 @@ Press 0 (Press 0 for MySQL metadata, Press 1 if Oracle, Press 2 for Postgres
 
 Press 1 (to continue)
 
-jdbc:mysql://localhost:3306/aiv_metadata?useSSL=false (Update the jdbc URL as follow)
+jdbc:mysql://localhost:3306/aiv?useSSL=false (Update the jdbc URL as follow if required or just press enter)
 
-aiv (in username)
+aiv_user (in username)
 
 password (in password)
 
