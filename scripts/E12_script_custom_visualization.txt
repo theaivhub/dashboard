@@ -3,7 +3,6 @@ Exercise 12 Extending Custom Visualization
 
 Task 1: Create a Json file
 
-Step 5:
 
 [
       {

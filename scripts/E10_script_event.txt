@@ -1,7 +1,7 @@
 Exercise 10 Create an event which passes the URL
 
 
-Task 3: Add an Event to your Donut chart
+Task 2: Add an Event to your Donut chart
 
 Step 3:
 
